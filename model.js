@@ -24,7 +24,7 @@ var config = {
 	}],
 	tokens: [],
 	users: [{
-		username: 'pedroetb',
+		username: 'william',
 		password: 'password'
 	}]
 };
