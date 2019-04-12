@@ -1,3 +1,4 @@
+
 var express = require('express'),
 	bodyParser = require('body-parser'),
 	OAuth2Server = require('oauth2-server'),
@@ -16,13 +17,32 @@ app.oauth = new OAuth2Server({
 	allowBearerTokensInQueryString: true
 });
 
-app.all('/oauth/token', obtainToken);
+// app.all('/oauth/token', obtainToken);
+
+app.post('/create', require('./model').createUser);
+app.delete('/delete/:id', require('./model').deleteUser);
+app.put('/update/:id', require('./model').updateUser)
+
+app.all('/oauth/token', function(req, res) {
+
+	var request = new Request(req);
+	var response = new Response(res);
+
+	return app.oauth.token(request, response).then(function(token) {
+		res.json(token);
+	}).catch(function(err) {
+			res.status(err.code || 500).json(err);
+		});
+	}
+);
+
 
 app.get('/', authenticateRequest, function(req, res) {
 
 	res.send('Congratulations, you are in a secret area!');
 });
 
+console.log("Servidor Rodando na Porta 3000");
 app.listen(3000);
 
 function obtainToken(req, res) {
